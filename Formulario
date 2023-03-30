@@ -1,0 +1,206 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.*;
+
+public class LoginRegistro extends JFrame implements ActionListener {
+
+    private JLabel lblUsuario, lblContrasenia;
+    private JTextField txtUsuario;
+    private JPasswordField txtContrasenia;
+    private JButton btnIngresar, btnRegistrar;
+
+    public LoginRegistro() {
+        super("Inicio de sesión");
+
+        // Crear los componentes de la interfaz
+        lblUsuario = new JLabel("Usuario:");
+        txtUsuario = new JTextField(20);
+
+        lblContrasenia = new JLabel("Contraseña:");
+        txtContrasenia = new JPasswordField(20);
+
+        btnIngresar = new JButton("Ingresar");
+        btnIngresar.addActionListener(this);
+
+        btnRegistrar = new JButton("Registrar");
+        btnRegistrar.addActionListener(this);
+
+        // Crear los paneles para organizar los componentes
+        JPanel pnlCampos = new JPanel(new GridLayout(2, 2));
+        pnlCampos.add(lblUsuario);
+        pnlCampos.add(txtUsuario);
+        pnlCampos.add(lblContrasenia);
+        pnlCampos.add(txtContrasenia);
+
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlBoton.add(btnIngresar);
+        pnlBoton.add(btnRegistrar);
+
+        JPanel pnlPrincipal = new JPanel(new BorderLayout());
+        pnlPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlPrincipal.add(pnlCampos, BorderLayout.CENTER);
+        pnlPrincipal.add(pnlBoton, BorderLayout.SOUTH);
+
+        // Agregar el panel principal a la ventana
+        add(pnlPrincipal);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnIngresar) {
+            // Validar el usuario y la contraseña y mostrar un mensaje de error si son incorrectos
+            String usuario = txtUsuario.getText();
+            String contrasenia = new String(txtContrasenia.getPassword());
+            if (validarUsuario(usuario, contrasenia)) {
+                JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso");
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+            }
+        } else if (e.getSource() == btnRegistrar) {
+            // Mostrar el formulario de registro de usuario
+            JFrame registro = new RegistroUsuario();
+            registro.pack();
+            registro.setLocationRelativeTo(null);
+            registro.setVisible(true);
+        }
+    }
+
+    private boolean validarUsuario(String usuario, String contrasenia) {
+        // Aquí podrías implementar la lógica para validar el usuario y la contraseña contra una base de datos o algún otro sistema
+        return usuario.equals("usuario1") && contrasenia.equals("contrasenia1");
+    }
+
+    public static void main(String[] args) {
+        // Crear y mostrar la ventana de inicio de sesión
+        LoginRegistro ventana = new LoginRegistro();
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
+    }
+}
+
+class RegistroUsuario extends JFrame implements ActionListener {
+
+    private JLabel lblNombreDeUsuario, lblNombre, lblApellido, lblTelefono, lblCorreo, lblContrasenia, lblConfirmarContrasenia;
+    private JTextField txtNombreDeUsuario, txtNombre, txtApellido, txtTelefono, txtCorreo;
+    private JPasswordField txtContrasenia, txtConfirmarContrasenia;
+    private JButton btnRegistrar;
+
+    public RegistroUsuario() {
+        super("Registro de usuario");
+
+        // Crear los componentes de la interfaz
+        lblNombreDeUsuario = new JLabel("Nombre de usuario:");
+        txtNombreDeUsuario = new JTextField(20);
+
+        lblNombre = new JLabel("Nombre:");
+        txtNombre = new JTextField(20);
+
+        lblApellido = new JLabel("Apellido:");
+        txtApellido = new JTextField(20);
+
+        lblTelefono = new JLabel("Teléfono:");
+        txtTelefono = new JTextField(20);
+
+        lblCorreo = new JLabel("Correo electrónico:");
+        txtCorreo = new JTextField(20);
+
+        lblContrasenia = new JLabel("Contraseña:");
+        txtContrasenia = new JPasswordField(20);
+
+        lblConfirmarContrasenia = new JLabel("Confirmar contraseña:");
+        txtConfirmarContrasenia = new JPasswordField(20);
+
+        btnRegistrar = new JButton("Registrar");
+        btnRegistrar.addActionListener(this);
+
+        // Crear los paneles para organizar los componentes
+        JPanel pnlCampos = new JPanel(new GridLayout(7, 2));
+        pnlCampos.add(lblNombreDeUsuario);
+        pnlCampos.add(txtNombreDeUsuario);
+        pnlCampos.add(lblNombre);
+        pnlCampos.add(txtNombre);
+        pnlCampos.add(lblApellido);
+        pnlCampos.add(txtApellido);
+        pnlCampos.add(lblTelefono);
+        pnlCampos.add(txtTelefono);
+        pnlCampos.add(lblCorreo);
+        pnlCampos.add(txtCorreo);
+        pnlCampos.add(lblContrasenia);
+        pnlCampos.add(txtContrasenia);
+        pnlCampos.add(lblConfirmarContrasenia);
+        pnlCampos.add(txtConfirmarContrasenia);
+
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlBoton.add(btnRegistrar);
+
+        JPanel pnlPrincipal = new JPanel(new BorderLayout());
+        pnlPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlPrincipal.add(pnlCampos, BorderLayout.CENTER);
+        pnlPrincipal.add(pnlBoton, BorderLayout.SOUTH);
+
+        // Agregar el panel principal a la ventana
+        add(pnlPrincipal);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnRegistrar) {
+            // Validar los campos y registrar el usuario si todo está correcto
+            String nombreDeUsuario = txtNombreDeUsuario.getText();
+            String nombre = txtNombre.getText();
+            String apellido = txtApellido.getText();
+            String telefono = txtTelefono.getText();
+            String correo = txtCorreo.getText();
+            String contrasenia = new String(txtContrasenia.getPassword());
+            String confirmarContrasenia = new String(txtConfirmarContrasenia.getPassword());
+            if (nombreDeUsuario.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || telefono.isEmpty() || correo.isEmpty() || contrasenia.isEmpty() || confirmarContrasenia.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
+            } else if (!contrasenia.equals(confirmarContrasenia)) {
+                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden");
+            } else {
+                // Aquí podrías llamar a un método para registrar al usuario en la base de datos o en algún otro lugar donde almacenes los datos de los usuarios
+                ConexionSQL.registrarUsuario(nombreDeUsuario, nombre, apellido, telefono, correo, contrasenia);
+                JOptionPane.showMessageDialog(this, "El usuario ha sido registrado correctamente");
+                dispose();
+            }
+        }
+    }
+
+    public class ConexionSQL {
+        private static final String URL = "jdbc:sqlserver://DESKTOP-G676IQ7/Frandy_PDF";
+        public static void registrarUsuario(String nombreDeUsuario, String nombre, String apellido, String telefono, String correo, String contrasenia) {
+            try {
+                // Conectar a la base de datos
+                Connection conexion = DriverManager.getConnection(URL);
+
+                // Preparar la sentencia SQL para insertar un nuevo usuario
+                String sql = "INSERT INTO usuarios (nombreDeUsuario, nombre, apellido, telefono, correo, contrasenia) VALUES (?, ?, ?, ?, ?, ?)";
+                PreparedStatement sentencia = conexion.prepareStatement(sql);
+                sentencia.setString(1, nombreDeUsuario);
+                sentencia.setString(2, nombre);
+                sentencia.setString(3, apellido);
+                sentencia.setString(4, telefono);
+                sentencia.setString(5, correo);
+                sentencia.setString(6, contrasenia);
+
+                // Ejecutar la sentencia SQL
+                int filasAfectadas = sentencia.executeUpdate();
+
+                // Cerrar la conexión a la base de datosA
+                sentencia.close();
+                conexion.close();
+
+                if (filasAfectadas > 0) {
+                    System.out.println("Usuario registrado exitosamente.");
+                } else {
+                    System.out.println("No se pudo registrar al usuario.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al conectar a la base de datos: " + e.getMessage());
+            }
+        }
+    }
+}
